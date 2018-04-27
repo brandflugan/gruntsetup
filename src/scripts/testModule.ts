@@ -11,7 +11,7 @@ interface Person {
 }
 
 export function greeter(person : Person) {
-    return `<h1>Hello ${person.firstName} ${person.lastName}</h1>`;
+    return `Hello ${person.firstName} ${person.lastName}`;
 }
 
 let user = new Student("Jane", "M.", "User");
