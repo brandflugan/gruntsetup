@@ -1,15 +1,22 @@
-import { Person } from './Person';
-
-class Student {
-    person;
-
-    constructor(firsName: string, lastName: string) {
-        this.person = new Person(firsName, lastName);
-    }
-
-    public getFullName() {
-        return `${this.person.firstName} ${this.person.lastName}`;
-    }
+export interface Person {
+    firstName: string;
+    lastName: string;
 }
 
-export = Student;
+export class Student {
+    firstName: string;
+    lastName: string;
+    heading: HTMLElement;
+
+    constructor(firstName: string, lastName: string) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+
+        this.heading = document.getElementById('heading');
+        this.heading.innerHTML = this.getFullName(this.firstName, this.lastName);
+    }
+
+    private getFullName(firstName: string, lastName: string) {
+        return `${firstName} ${lastName}`;
+    }
+}
