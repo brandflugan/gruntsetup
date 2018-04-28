@@ -2,15 +2,15 @@
 <html>
     <head>
         <title>KG Da Man, plx help mee</title>
-        <meta charset="utf-8">
-        <script data-main="scripts/Main" src="scripts/require.js"></script>
+        <script data-main="scripts/Student" src="scripts/require.js" type="text/javascript"></script>
     </head>
     <body>
         <h1 id="heading">Welcome!! !!!!</h1>
-        <!--<script>-->
-            <!--require(['Can'], function (module) {-->
-                <!--new module.Can();-->
-            <!--});-->
-        <!--</script>-->
+        <script>
+            require(['Student'], function (studentModule) {
+                var student = new studentModule('Kristofer', 'Gullberg');
+                console.log(student.getFullName());
+            });
+        </script>
     </body>
 </html>
