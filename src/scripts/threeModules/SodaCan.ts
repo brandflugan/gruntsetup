@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-
 export class SodaCan {
     constructor() {
         const scene = new THREE.Scene();
@@ -9,8 +8,8 @@ export class SodaCan {
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
 
-        const geometry = new THREE.BoxGeometry(1, 1, 1);
-        const material = new THREE.MeshBasicMaterial({color: 0x00ff00});
+        const geometry = new THREE.BoxGeometry(3, 3, 3);
+        const material = new THREE.MeshBasicMaterial({color: 0x343434, map: this.setTexture()});
         const cube = new THREE.Mesh(geometry, material);
         scene.add(cube);
 
@@ -26,5 +25,14 @@ export class SodaCan {
         };
 
         animate();
+    }
+
+    private setTexture() {
+        const texture = new THREE.TextureLoader().load( "images/kg.jpg" );
+        texture.wrapS = THREE.RepeatWrapping;
+        texture.wrapT = THREE.RepeatWrapping;
+        texture.repeat.set( 4, 4 );
+
+        return texture;
     }
 }
