@@ -1,4 +1,4 @@
-import Person = require('./Person');
+import { Person } from './Person';
 
 class Student {
     person;
