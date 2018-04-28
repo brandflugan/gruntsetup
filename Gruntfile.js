@@ -1,5 +1,3 @@
-var LIVERELOAD_PORT = 35729;
-
 module.exports = function(grunt) {
 
     grunt.initConfig({
@@ -25,6 +23,12 @@ module.exports = function(grunt) {
                         expand: true,
                         cwd: 'node_modules/requirejs',
                         src: ['require.js'],
+                        dest: './dist/scripts'
+                    },
+                    {
+                        expand: true,
+                        cwd: 'node_modules/three/build',
+                        src: ['three.js'],
                         dest: './dist/scripts'
                     },
                 ],
