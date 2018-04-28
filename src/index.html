@@ -2,13 +2,13 @@
 <html>
     <head>
         <title>KG Da Man, plx help mee</title>
-        <script data-main="scripts/Student.js" src="scripts/require.js"></script>
+        <script data-main="scripts/Student" src="scripts/require.js" type="text/javascript"></script>
     </head>
     <body>
         <h1 id="heading">Welcome!! !!!!</h1>
         <script>
-            require(['Student'], function (Student) {
-                var student = new Student('Kristofer', 'Gullberg');
+            require(['Student'], function (studentModule) {
+                var student = new studentModule('Kristofer', 'Gullberg');
                 console.log(student.getFullName());
             });
         </script>

@@ -1,9 +1,9 @@
 import { Person } from './Person';
 
-class Student {
+export = class Student {
     person;
 
-    constructor(firsName: string, lastName: string) {
+    constructor(public firsName: string, public lastName: string) {
         this.person = new Person(firsName, lastName);
     }
 
@@ -11,5 +11,3 @@ class Student {
         return `${this.person.firstName} ${this.person.lastName}`;
     }
 }
-
-export = Student;

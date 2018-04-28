@@ -2,7 +2,7 @@
     "compilerOptions": {
         "target": "es6",
         "module": "amd",
-        "moduleResolution": "node",
+        "moduleResolution": "classic",
         "sourceMap": true,
         "rootDir": "src/",
         "outDir": "dist/",
