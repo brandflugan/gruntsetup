@@ -20,9 +20,15 @@ module.exports = function(grunt) {
                         expand: true,
                         cwd: 'src',
                         src: ['**', '!**/*.ts'],
-                        dest: './dist/'},
+                        dest: './dist/'
+                    }, {
+                        expand: true,
+                        cwd: 'node_modules/requirejs',
+                        src: ['require.js'],
+                        dest: './dist/scripts'
+                    },
                 ],
-            },
+            }
         },
         jshint: {
             files: ['./Gruntfile.js'],
