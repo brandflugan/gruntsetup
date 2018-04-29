@@ -8,9 +8,9 @@
         "outDir": "dist/",
         "emitDecoratorMetadata": true,
         "removeComments": true,
-        "noImplicitAny": false,
-        "types": ["three", "requirejs"],
-        "typeRoots": ["node_modules/@types"]
+        "noImplicitAny": false
+//        "types": ["three", "requirejs"]
+//        "typeRoots": ["node_modules/@types"]
     },
     "exclude": [
         "node_modules"

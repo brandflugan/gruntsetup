@@ -23,7 +23,7 @@ module.exports = function(grunt) {
                         expand: true,
                         cwd: 'node_modules/requirejs',
                         src: ['require.js'],
-                        dest: './dist/scripts'
+                        dest: './dist/scripts/external'
                     },
                     {
                         expand: true,
@@ -31,9 +31,24 @@ module.exports = function(grunt) {
                         src: ['three.js'],
                         dest: './dist/scripts'
                     },
+                    // {
+                    //     expand: true,
+                    //     cwd: 'node_modules/three-orbit-controls/',
+                    //     src: ['index.js'],
+                    //     dest: './dist/scripts'
+                    // },
                 ],
             }
         },
+        // concat: {
+        //     options: {
+        //         separator: ';',
+        //     },
+        //     dist: {
+        //         src: ['node_modules/three/build/three.js', 'node_modules/three/examples/js/controls/OrbitControls.js'],
+        //         dest: 'dist/scripts/three.js',
+        //     },
+        // },
         jshint: {
             files: ['./Gruntfile.js'],
             options: {
@@ -70,6 +85,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-connect');
 
     grunt.registerTask('default', ['jshint', 'clean', 'ts', 'copy', 'connect', 'watch']);

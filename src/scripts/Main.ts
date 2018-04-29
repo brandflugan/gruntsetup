@@ -1,3 +1,3 @@
-requirejs(['threeModules/SodaCan'], function(sodaCanModule){
-    new sodaCanModule.SodaCan();
+requirejs(['threeModules/SodaCanController'], function(controller){
+    new controller.SodaCanController();
 });
