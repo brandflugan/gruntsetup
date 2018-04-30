@@ -1,10 +1,15 @@
 import * as THREE from 'three';
 
-export function Plane() {
-    const geometry = new THREE.PlaneGeometry(32, 32);
-    const material = new THREE.MeshBasicMaterial({color: 0x348060});
+export function Plane(): THREE.Mesh {
+    const geometry = new THREE.PlaneGeometry(2000, 2000);
+    // geometry.rotateX( - Math.PI / 2 );
+    const material = new THREE.ShadowMaterial();
+    material.opacity = 0.4;
 
-    return new THREE.Mesh(geometry, material);
+    const plane = new THREE.Mesh(geometry, material);
+    plane.position.y = -202;
+    plane.receiveShadow = true;
+    return plane;
 
     // function setTexture(): THREE.Texture {
     //     const texture = new THREE.TextureLoader().load('images/cobblestone.png');

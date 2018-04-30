@@ -1,6 +1,8 @@
 import * as THREE from 'three';
+import { OrbitControls } from '../utils/OrbitControls';
 import {SodaCan} from './SodaCan';
 import {Plane} from './Plane';
+import {ConvertRadToDeg} from "../utils/ConvertRadToDeg";
 // @ts-ignore
 // import * as THREE from '/scripts/external/three';
 
@@ -9,39 +11,83 @@ export class SodaCanController {
     scene: THREE.Scene;
     sodaCans = [];
     plane;
+    helper;
     camera;
-    rotSpeed: number = 0.06;
+    sodaCanSize = 8;
 
     constructor() {
         /** Camera settings **/
-        const _FOV: number = 60;
+        const _FOV: number = 70;
         const _ASPECT: number = window.innerWidth / window.innerHeight;
-        const _NEAR: number = 0.1;
-        const _FAR: number = 1000;
+        const _NEAR: number = 1;
+        const _FAR: number = 10000;
 
         this.camera = new THREE.PerspectiveCamera(_FOV, _ASPECT, _NEAR, _FAR);
         this.camera.position.x = 0;
-        this.camera.position.y = 10;
-        this.camera.position.z = 15;
+        this.camera.position.y = 0;
+        this.camera.position.z = 1000;
 
         /** Scene setup **/
         this.scene = new THREE.Scene();
         this.camera.lookAt(this.scene.position);
 
+        /** Light setup **/
+        this.scene.add(new THREE.AmbientLight(0xf0f0f0 ));
+        let light = new THREE.SpotLight( 0xffffff, 1.5);
+        light.position.set(0, 1500, 200);
+        light.castShadow = true;
+        // @ts-ignore
+        light.shadow = new THREE.LightShadow(new THREE.PerspectiveCamera(70, 1, 200, 2000));
+        light.shadow.bias = -0.000222;
+        light.shadow.mapSize.width = 1024;
+        light.shadow.mapSize.height = 1024;
+        this.scene.add(light);
+
+        /** Helper **/
+        this.helper = new THREE.GridHelper( 2000, 100 );
+        this.helper.position.y = - 201;
+        this.helper.material.opacity = 0.25;
+        this.helper.material.transparent = true;
+        this.scene.add(this.helper);
+
         /** Renderer setup **/
-        let renderer = new THREE.WebGLRenderer();
+        let renderer = new THREE.WebGLRenderer({antialias: true});
+        renderer.setPixelRatio( window.devicePixelRatio );
+        renderer.setClearColor(0xf0f0f0);
+        // renderer.setPixelRatio( window.devicePixelRatio );
+        // renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMap.enabled = true;
         this.wrapper.appendChild(renderer.domElement);
+
+        /** Control setup **/
+        const controls = new OrbitControls(this.camera, renderer.domElement);
+
+        // How far you can orbit vertically, upper and lower limits.
+        controls.minPolarAngle = 0;
+        controls.maxPolarAngle = Math.PI;
+
+        // How far you can dolly in and out ( PerspectiveCamera only )
+        controls.minDistance = 0;
+        controls.maxDistance = Infinity;
+
+        controls.enableZoom = true; // Set to false to disable zooming
+        controls.zoomSpeed = 1.0;
+
+        controls.enablePan = true; // Set to false to disable panning (ie vertical and horizontal translations)
 
         /** Add plane to scene **/
         this.plane = Plane();
-        this.plane.rotation.x = this.convertRadianToDegree(-90);
+        this.plane.rotation.x = ConvertRadToDeg(-90);
         this.scene.add(this.plane);
 
         /** Add elements to array **/
-        this.sodaCans.push(SodaCan());
+        this.sodaCans.push(SodaCan(this.sodaCanSize));
 
         /** Add elements to scene **/
         this.sodaCans.map(sodaCan => {
+            sodaCan.castShadow = true;
+            console.log(sodaCan.geometry.parameters.height);
+            sodaCan.position.y = this.helper.position.y + (sodaCan.geometry.parameters.height / 2);
             return this.scene.add(sodaCan);
         });
 
@@ -57,33 +103,19 @@ export class SodaCanController {
         animate();
     }
 
-    private convertRadianToDegree(radianVal) {
-        return radianVal * ((Math.PI * 2) / 360);
-    }
-
     private animationCallback(animate, renderer, camera) {
         requestAnimationFrame(animate);
-        // this.sodaCans[0].rotation.x += 0.002;
-        // this.sodaCans[0].rotation.y += 0.002;
-        // camera.lookAt(this.sodaCans[0].position);
-        // this.camera.lookAt(this.plane.position);
 
         this.resizeCanvasToDisplaySize(renderer, camera, true);
     }
 
-
     private onKeyDown = (event) => {
-        this.checkRotation(event.key);
         switch(event.key) {
-            case 'w': // in
-                if (this.camera.position.z > 5) {
-                    this.camera.position.z -= 0.5;
-                }
+            case 'a': // in
+                this.addSodaCan();
                 break;
-            case 's': // out
-                if (this.camera.position.z < 35) {
-                    this.camera.position.z += 0.5;
-                }
+            case 'r': // out
+                this.removeSodaCan();
                 break;
         }
     };
@@ -100,25 +132,14 @@ export class SodaCanController {
             renderer.setSize(width, height, false);
             camera.aspect = width / height;
             camera.updateProjectionMatrix();
-
-            // update any render target sizes here
         }
     }
 
-    private checkRotation(key){
-        let x = this.camera.position.x;
-        let y = this.camera.position.y;
-        let z = this.camera.position.z;
+    private addSodaCan(){
 
-        if (key === 'a') {
-            this.camera.position.x = x * Math.cos(this.rotSpeed) + z * Math.sin(this.rotSpeed);
-            this.camera.position.z = z * Math.cos(this.rotSpeed) - x * Math.sin(this.rotSpeed);
-        } else if (key === 'd') {
-            this.camera.position.x = x * Math.cos(this.rotSpeed) - z * Math.sin(this.rotSpeed);
-            this.camera.position.z = z * Math.cos(this.rotSpeed) + x * Math.sin(this.rotSpeed);
-        }
+    }
 
-        this.camera.lookAt(this.scene.position);
+    private removeSodaCan(){
 
     }
 }
