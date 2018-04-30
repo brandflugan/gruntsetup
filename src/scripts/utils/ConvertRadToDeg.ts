@@ -1,3 +1,3 @@
-export function ConvertRadToDeg(degree: number) {
-    return degree * ((Math.PI * 2) / 360);
+export function ConvertRadToDeg(degrees: number) {
+    return degrees * ((Math.PI * 2) / 360);
 }

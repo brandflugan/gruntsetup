@@ -13,6 +13,7 @@ export class SodaCanController {
     plane;
     helper;
     camera;
+    light;
     sodaCanSize = 8;
 
     constructor() {
@@ -23,9 +24,7 @@ export class SodaCanController {
         const _FAR: number = 10000;
 
         this.camera = new THREE.PerspectiveCamera(_FOV, _ASPECT, _NEAR, _FAR);
-        this.camera.position.x = 0;
-        this.camera.position.y = 0;
-        this.camera.position.z = 1000;
+        this.camera.position.set(0, 100, 150);
 
         /** Scene setup **/
         this.scene = new THREE.Scene();
@@ -33,29 +32,30 @@ export class SodaCanController {
 
         /** Light setup **/
         this.scene.add(new THREE.AmbientLight(0xf0f0f0 ));
-        let light = new THREE.SpotLight( 0xffffff, 1.5);
-        light.position.set(0, 1500, 200);
-        light.castShadow = true;
+        this.light = new THREE.SpotLight(0xffffff, 1, 0.0, Math.PI/3, 0.0, 2);
+        this.light.position.set(0, 1000, 1000);
+        this.light.castShadow = true;
         // @ts-ignore
-        light.shadow = new THREE.LightShadow(new THREE.PerspectiveCamera(70, 1, 200, 2000));
-        light.shadow.bias = -0.000222;
-        light.shadow.mapSize.width = 1024;
-        light.shadow.mapSize.height = 1024;
-        this.scene.add(light);
+        this.light.shadow = new THREE.LightShadow(new THREE.PerspectiveCamera(70, 1, 200, 2000));
+        this.light.shadow.bias = -0.000222;
+        this.light.shadow.mapSize.width = 2048;
+        this.light.shadow.mapSize.height = 2048;
+        this.scene.add(this.light);
+
+        let spotLightHelper = new THREE.SpotLightHelper( this.light );
+        this.scene.add(spotLightHelper);
 
         /** Helper **/
         this.helper = new THREE.GridHelper( 2000, 100 );
-        this.helper.position.y = - 201;
+        this.helper.position.y = - 0;
         this.helper.material.opacity = 0.25;
         this.helper.material.transparent = true;
         this.scene.add(this.helper);
 
         /** Renderer setup **/
         let renderer = new THREE.WebGLRenderer({antialias: true});
-        renderer.setPixelRatio( window.devicePixelRatio );
+        renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setClearColor(0xf0f0f0);
-        // renderer.setPixelRatio( window.devicePixelRatio );
-        // renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.shadowMap.enabled = true;
         this.wrapper.appendChild(renderer.domElement);
 
@@ -64,7 +64,7 @@ export class SodaCanController {
 
         // How far you can orbit vertically, upper and lower limits.
         controls.minPolarAngle = 0;
-        controls.maxPolarAngle = Math.PI;
+        controls.maxPolarAngle = ConvertRadToDeg(180);
 
         // How far you can dolly in and out ( PerspectiveCamera only )
         controls.minDistance = 0;
@@ -82,12 +82,15 @@ export class SodaCanController {
 
         /** Add elements to array **/
         this.sodaCans.push(SodaCan(this.sodaCanSize));
+        this.sodaCans.push(SodaCan(this.sodaCanSize));
 
         /** Add elements to scene **/
         this.sodaCans.map(sodaCan => {
+            // this.calculateSize(sodaCan);
+            if(this.sodaCans.indexOf(sodaCan) == 1) {
+                sodaCan.position.y += this.calculateSize(sodaCan).y;
+            }
             sodaCan.castShadow = true;
-            console.log(sodaCan.geometry.parameters.height);
-            sodaCan.position.y = this.helper.position.y + (sodaCan.geometry.parameters.height / 2);
             return this.scene.add(sodaCan);
         });
 
@@ -101,6 +104,11 @@ export class SodaCanController {
         };
         this.resizeCanvasToDisplaySize(renderer, this.camera);
         animate();
+    }
+
+    private calculateSize(sodaCan: THREE.Mesh) {
+        sodaCan.geometry.computeBoundingBox();
+        return sodaCan.geometry.boundingBox.getSize(new THREE.Vector3());
     }
 
     private animationCallback(animate, renderer, camera) {

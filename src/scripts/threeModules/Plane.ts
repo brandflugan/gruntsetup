@@ -4,10 +4,10 @@ export function Plane(): THREE.Mesh {
     const geometry = new THREE.PlaneGeometry(2000, 2000);
     // geometry.rotateX( - Math.PI / 2 );
     const material = new THREE.ShadowMaterial();
-    material.opacity = 0.4;
+    material.opacity = 0.2;
 
     const plane = new THREE.Mesh(geometry, material);
-    plane.position.y = -202;
+    plane.position.y = -1;
     plane.receiveShadow = true;
     return plane;
 
