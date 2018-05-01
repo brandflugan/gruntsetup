@@ -1,23 +1,21 @@
 import * as THREE from 'three';
 
 export function SodaCan(size: number) {
-    const logoMaterial = new THREE.MeshLambertMaterial({map: setTexture(), envMap: setEnvMap(), overdraw: 155.5});
-
+    const logoMaterial = new THREE.MeshLambertMaterial({map: setTexture(), envMap: setEnvMap()});
     const latheGeometry = new THREE.LatheBufferGeometry(drawLathePath().getPoints(), 64);
-    latheGeometry.scale(size, size, size);
 
-    // const foilMaterial = new THREE.MeshLambertMaterial({color: 'silver'});
-    // const geometry = new THREE.CylinderGeometry(size * 4, size * 4, size * 12, 64);
-    // return new THREE.Mesh(geometry, [logoMaterial, foilMaterial, foilMaterial]);
+    const getUV = latheGeometry.getAttribute('uv');
+    const getPosition = latheGeometry.getAttribute('position');
+
+    for(let i = 0; i < getPosition.count; i++){
+        getUV.setY(i, getPosition.getY(i) > 1 ? 0.775 : 0.23);
+    }
+    latheGeometry.scale(size, size, size);
 
     return new THREE.Mesh(latheGeometry, [logoMaterial]);
 
     function setTexture(): THREE.Texture {
-        const texture = new THREE.TextureLoader().load('images/coca-cola-texture.jpg');
-        texture.wrapS = THREE.RepeatWrapping;
-        texture.wrapT = THREE.RepeatWrapping;
-        texture.repeat.set(1, 1);
-        return texture;
+        return new THREE.TextureLoader().load('images/coca-cola-texture.png');
     }
 
     function setEnvMap(): THREE.Texture {
@@ -31,9 +29,16 @@ export function SodaCan(size: number) {
         lathe.lineTo(0, 0);
         lathe.absarc(1, 0, 0.125, Math.PI, Math.PI * 2, true);
         lathe.lineTo(1.5, 0.5);
-        lathe.lineTo(1.5, 4.5);
-        lathe.absarc(1, 5, 0.125, 0, Math.PI, true);
-        lathe.lineTo(0, 5);
+        lathe.lineTo(1.5, 4.4);
+        lathe.lineTo(1.1, 4.8);
+        lathe.lineTo(1.1, 4.9);
+        lathe.lineTo(1.14, 4.9);
+        lathe.lineTo(1.14, 5);
+        lathe.lineTo(1.1, 5);
+        lathe.lineTo(1, 4.9);
+        lathe.lineTo(1, 4.8);
+        lathe.absarc(1, 4.75, 0.125, 0, Math.PI, true);
+        lathe.lineTo(0, 4.75);
         return lathe;
     }
 }
